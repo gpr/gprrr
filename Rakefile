@@ -39,7 +39,9 @@ task test: :spec
 # Documentation task
 require 'yard'
 
+YARD::Config.load_plugin('minitest-spec')
+
 YARD::Rake::YardocTask.new do |t|
-  t.files = ['lib/**/*.rb', 'spec/*_spec.rb']
-  t.stats_options = ['--list-undoc', '--plugin', 'minitest-spec' ]
+  t.files = ['lib/**/*.rb', 'spec/*_spec.rb', ]
+  t.stats_options = ['--list-undoc']
 end
