@@ -46,6 +46,24 @@ To launch the test suite with coverage:
     $ rake COVERAGE=1 spec
     $ $BROWSER coverage/index.html
 
+### Documentation
+
+Yard is based on RDoc with some improvements.
+
+See:
+
+* [Yard](https://github.com/lsegal/yard/wiki/GettingStarted)
+* [RDoc](https://github.com/rdoc/rdoc)
+
+To generate the documentation:
+
+    $ rake yard
+    $ $BROWSER doc/index.html
+
+To dynamically preview the doc (automatically refreshed):
+
+    $ yard server --reload
+
 ## Contributing
 
 1. Fork it ( https://github.com/gpr/gem_template/fork )
@@ -53,3 +71,12 @@ To launch the test suite with coverage:
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+
+## Rake Tasks
+
+* `rake build    # Build gem_template-0.1.0.beta1.gem into the pkg directory`
+* `rake install  # Build and install gem_template-<VERSION>.gem into system gems`
+* `rake release  # Create tag v0.1.0.beta1 and build and push gem_template-<VERSION>.gem to Rubygems`
+* `rake spec     # Run minitest spec test suite`
+* `rake yard     # Generate YARD Documentation`

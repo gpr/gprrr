@@ -1,5 +1,7 @@
 require 'bundler/gem_tasks'
 
+# -----------------------------------------------------------------------------
+# Testing task
 if ENV['COVERAGE']
 
   require 'simplecov'
@@ -29,4 +31,15 @@ task :spec do
 
   $LOAD_PATH.unshift('lib', 'spec')
   Dir.glob('./spec/*_spec.rb') { |f| require f }
+end
+
+task test: :spec
+
+# -----------------------------------------------------------------------------
+# Documentation task
+require 'yard'
+
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['lib/**/*.rb', 'spec/*_spec.rb']
+  t.stats_options = ['--list-undoc', '--plugin', 'minitest-spec' ]
 end
