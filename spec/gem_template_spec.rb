@@ -6,6 +6,6 @@ describe GemTemplate do
   end
 
   it 'does something useful' do
-    skip 'There is nothing useful yet'
+    GemTemplate.is_a?(Module).must_equal true
   end
 end

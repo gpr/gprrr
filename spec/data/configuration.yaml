@@ -1,0 +1,7 @@
+test_quoted_string: 'value1'
+test_string: value2
+
+test:
+  db_username: username
+  db_password: password
+
