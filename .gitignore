@@ -5,6 +5,7 @@
 /coverage/
 /doc/
 /pkg/
-/test/reports/
+/spec/reports/
 /tmp/
 .idea/
+spec/reports/
