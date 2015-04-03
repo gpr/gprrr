@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+class String
+  def camelize
+    new = self.dup
+    new.camelize!
+  end
+  def camelize!
+    self.replace(self.split("_").each {|s| s.capitalize! }.join(""))
+  end
+end
+
+raise ArgumentError.new('usage: create_gem <new_name>') if ARGV.nil? or ARGV.size != 1
+
+new_name = ARGV.shift
+new_class_name = new_name.camelize
+
+puts "Creating new gem #{new_class_name} from template"
+
+gem_root = File.dirname __dir__
+
+Dir.glob(File.join(gem_root, '**/*')) do |file|
+  unless File.directory? file or /.*create_gem/.match(file) or /.*Gemfile\.lock/
+    puts file
+    text = File.read(file)
+    new_text = text.gsub(/@@gem_template@@/, new_name)
+    new_text = new_text.gsub(/gem_template/, new_name)
+    new_text = new_text.gsub(/GemTemplate/, new_class_name)
+    File.open(file, "w") {|file| file.puts new_text}
+  end
+end

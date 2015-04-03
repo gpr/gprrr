@@ -20,7 +20,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To create a new gem from the template:
+
+1. Clone it `git clone -o template git@github.com:gpr/gem_template.git' <new_name>`
+2. Run the script with the new gem name `cd <new_name>; ./bin/create_gem <new_name>`
+3. Edit the README
+4. Commit the change `git commit -a -m "<new_name> gem created"`
+5. Add the new git repository `git remote add origin git@github.com:gpr/<new_name>.git'`
+6. Push and set the upstream `git push --set-upstream origin master`
 
 ## Development
 
