@@ -29,6 +29,11 @@ To create a new gem from the template:
 5. Add the new git repository `git remote add origin git@github.com:gpr/<new_name>.git'`
 6. Push and set the upstream `git push --set-upstream origin master`
 
+### Configuration
+
+It is possible to configure @@gem_template@@ by creating the file `$HOME/.gem_template.yaml`. You can copy default
+configuration `etc/config.yaml` from the gem repository.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
