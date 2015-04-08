@@ -1,10 +1,11 @@
 # coding: utf-8
 
+require 'gem_template/logging'
+
 module GemTemplate
 
   require 'optparse'
   require 'ostruct'
-  require 'logger'
   require 'mail'
   require 'yaml'
 
@@ -13,6 +14,8 @@ module GemTemplate
 
   # Class to specialize for generating console command
   class Cli
+    include GemTemplate::Config
+    include GemTemplate::Logging
 
     # Class initialization
     #
@@ -26,44 +29,45 @@ module GemTemplate
       @options.debug = false
       @options.progress = true
       @options.log_to_file = true
-      @options.config_file = File.join(ENV['HOME'], '.gem_template')
+      @options.config_file = nil
+      @options.notification = false
 
       opts.separator ''
       opts.separator 'Common options:'
 
-      # Boolean switch. Enable email notification.
+      # Load a specific configuration file.
       opts.on('-CCONFIG_FILE', '--config CONFIG_FILE', 'Configuration file' ) do |config_file|
         @options.config_file = config_file
       end
 
       # Boolean switch. Enable email notification.
-      opts.on('-N', '--[no-]notify', 'Enable mail notification (default is false)' ) do |n|
-        @options.notification = n
+      opts.on('-N', '--notify', 'Enable mail notification' ) do |n|
+        @options.notification = true
       end
 
-      # Boolean switch. Enable email notification.
+      # Defines recipients of the email notification.
       opts.on('-TRECIPIENTS', '--to RECIPIENTS', 'Mail notification recipients' ) do |recipients|
         @options.recipients = recipients
       end
 
       # Boolean switch. Enable verbose mode.
-      opts.on('-v', '--[no-]verbose', 'Run verbosely (default is false)') do |v|
-        @options.verbose = v
+      opts.on('-v', '--verbose', 'Run verbosely') do |v|
+        @options.verbose = true
       end
 
       # Boolean switch. Enable debug mode.
-      opts.on('-D', '--[no-]debug', 'Debug mode (default is false)') do |d|
-        @options.debug = d
+      opts.on('-D', '--debug', 'Debug mode') do |d|
+        @options.debug = true
       end
 
-      # Boolean switch. Enable progress bar.
-      opts.on('-P', '--[no-]progress', 'Display progress and logs to file (default is true)') do |p|
-        @options.progress = p
+      # Boolean switch. Disable progress bar.
+      opts.on('-P', '--no-progress', "Don't display progress bar") do |p|
+        @options.progress = false
       end
 
-      # Boolean switch. Enable logfile
-      opts.on('-L', '--[no-]logfile', 'Use logfile instead of STDOUT (default is true)') do |l|
-        @options.log_to_file = l
+      # Boolean switch. Disable logfile
+      opts.on('-L', '--no-logfile', "Don't use logfile, print logs to STDOUT") do |l|
+        @options.log_to_file = false
       end
 
       # Display help message
@@ -75,7 +79,7 @@ module GemTemplate
       # Display version
       opts.on_tail('--version', 'Show version') do
         puts "#{self.class::PROG_NAME} v#{self.class::VERSION.join('.')} (gem_template v#{GemTemplate::VERSION})"
-        puts ""#{self.class::COPY}."
+        puts "#{self.class::COPY}."
         exit 0
       end
 
@@ -97,47 +101,42 @@ module GemTemplate
         @args = opts.parse!(argv)
       end
 
-      # Logfile
-      if @options.log_to_file
-        if @options.notification
-          @log_filename = "'#{self.class::PROG_NAME}_#{Time.now.strftime '%Y%m%d_%H%M%S'}.log'"
-          @logger = Logger.new(@log_filename)
-        else
-          @log_filename = "'#{self.class::PROG_NAME}_#{Time.now.strftime '%Y%m%d'}.log'"
-          @logger = Logger.new(@log_filename, 'daily')
-        end
+      # Configuration
+      GemTemplate::Config.init_config(@options.config_file)
 
+      # Logger
+      if @options.notification
+        log_filename = "#{self.class::PROG_NAME}_#{Time.now.strftime '%Y%m%d_%H%M%S'}.log"
+        rotation = nil
       else
-        @logger = Logger.new(STDOUT)
-        @logger.formatter = proc do |severity, datetime, progname, msg|
-          '[#{severity}] #{msg}\n'
-        end
+        log_filename = "#{self.class::PROG_NAME}_#{Time.now.strftime '%Y%m%d'}.log"
+        rotation = 'daily'
       end
+
+      GemTemplate::Logging.init_logger(@options.log_to_file, log_filename, rotation)
 
       if @options.debug
-        @logger.level = Logger::DEBUG
+        logger.level = Logger::DEBUG
       elsif @options.verbose or @options.log_to_file
-        @logger.level = @logger.level = Logger::INFO
+        logger.level = Logger::INFO
       else
-        @logger.level = Logger::WARN
+        logger.level = Logger::WARN
       end
+
+      # Check if the configuration file has been parsed
+      unless config
+        logger.warn "Unable to load configuration files"
+      end
+
 
       # Mail configuration
       Mail.defaults do
         delivery_method :smtp, address: 'TODO', domain: 'TODO'
       end
-
-      begin
-        config_content = File.read(@options.config_file)
-        config = YAML.load(config_content)
-      rescue
-        @logger.warn 'Invalid configuration file '#{@options.config_file}''
-      end
-
-      configatron.configure_from_hash(config) if config
-
-      @config = configatron
     end
+
+    # -------------------------------------------------------------------------
+    # Mail notification functions
 
     # Create a progress bar
     def progress_bar(title, total, unit)
@@ -164,15 +163,6 @@ module GemTemplate
       @bar.increment if @options.progress and @bar
     end
 
-    # Increment the progress bar with error marker
-    def bar_error_increment
-      if @options.progress and @bar
-        @bar.progress_mark = '!'
-        @bar.increment
-        @bar.progress_mark = ' '
-      end
-    end
-
     # Finish the progress bar
     def bar_finish
       @bar.finish if @options.progress  and @bar
@@ -183,11 +173,11 @@ module GemTemplate
 
       if last_msg
         puts last_msg
-        @logger.info(last_msg)
+        logger.info(last_msg)
       end
 
-      subject ||= '#{self.class::PROG_NAME} execution finished'
-      body = @body + '\n#{last_msg}\n\nSee attachment for more information\n'
+      subject ||= "#{self.class::PROG_NAME} execution finished"
+      body = @body + "\n#{last_msg}\n\nSee attachment for more information\n"
       if errors != 0
         mail_error(subject, body)
       else
@@ -208,7 +198,6 @@ module GemTemplate
 
     # Create an email
     def mail(subject, body)
-
       prog_name = self.class::PROG_NAME
       log_to_file = @options.log_to_file
       log_filename = @log_filename
@@ -216,7 +205,7 @@ module GemTemplate
       @mail = Mail.new do
         from    'noreply@gem_template.com'
         to      recipients
-        subject '[#{prog_name}]#{subject}'
+        subject "[#{prog_name}]#{subject}"
         body    body
         add_file log_filename if log_to_file
       end
@@ -224,17 +213,17 @@ module GemTemplate
 
     # Create an error email notification
     def mail_error(subject, body)
-      mail('[ERROR] #{subject}', body) if @options.notification
+      mail("[ERROR] #{subject}", body) if @options.notification
     end
 
     # Create an success email notification
     def mail_success(subject, body)
-      mail('[SUCCESS] #{subject}', body) if @options.notification
+      mail("[SUCCESS] #{subject}", body) if @options.notification
     end
 
     # Create an informative email notification
     def mail_info(subject, body)
-      mail('[INFO] #{subject}', body) if @options.notification
+      mail("[INFO] #{subject}", body) if @options.notification
     end
 
     # -------------------------------------------------------------------------
@@ -264,27 +253,6 @@ module GemTemplate
       puts msg
       info(msg) if @options.log_to_file
     end
-
-    # Log an INFO message
-    def info(msg)
-      @logger.info(msg)
-    end
-
-    # Log a WARNING message
-    def warning(msg)
-      @logger.warn(msg)
-    end
-
-    # Log a DEBUG message
-    def debug(msg)
-      @logger.debug(msg)
-    end
-
-    # Log an ERROR message
-    def error(msg)
-      @logger.error msg
-    end
-
   end
 
 end

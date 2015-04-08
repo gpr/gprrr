@@ -9,8 +9,6 @@ require 'gem_template/cli'
 require 'gem_template/version'
 
 class TestCli < GemTemplate::Cli
-  attr_reader :config
-
   VERSION = [1,0,0]
   PROG_NAME = 'cli-test'
   COPY = 'Copyright (C) 2015 Test Copyright'
@@ -36,7 +34,10 @@ class TestCli < GemTemplate::Cli
   end
 
   def main
-    @logger.info("Type: %s" % @options.type)
+    debug("Test logger debug")
+    info("Test logger info")
+    warning("Test logger warning")
+    error("Test logger error")
     puts 'MAIN!'
   end
 end
@@ -44,6 +45,7 @@ end
 describe GemTemplate::Cli do
 
   describe '#initialize' do
+
     it 'should be executed correctly without option' do
       cli = TestCli.new
       out, err = capture_io do
@@ -52,7 +54,7 @@ describe GemTemplate::Cli do
       assert_match /MAIN!/, out
     end
 
-    it 'should display help message' do
+    it 'should display help message with --help' do
       out = nil
       out, err = capture_io do
         begin
@@ -64,7 +66,69 @@ describe GemTemplate::Cli do
       assert_match /Mandatory arguments:/, out
     end
 
-    it 'should allow to setup configuration file' do
+    it 'should display version --version' do
+      out = nil
+      out, err = capture_io do
+        begin
+          cli = TestCli.new ['--version']
+            # Rescue from standard exit
+        rescue SystemExit
+        end
+      end
+
+      assert_match "#{TestCli::COPY}", out
+      assert_match "#{TestCli::PROG_NAME} v#{TestCli::VERSION.join('.')} (gem_template v#{GemTemplate::VERSION})", out
+    end
+
+    it 'should log to stdout with --no-logfile' do
+      GemTemplate::Config.reset!
+      GemTemplate::Logging.reset!
+
+      cli = TestCli.new ['--no-logfile']
+      out, err = capture_subprocess_io do
+        cli.main
+      end
+      assert_match /MAIN!/, out
+      refute_match /Test logger debug/, out
+      refute_match /Test logger info/, out
+      assert_match /Test logger warning/, out
+      assert_match /Test logger error/, out
+    end
+
+    it 'should log verbosely with -V/--verbose' do
+      GemTemplate::Config.reset!
+      GemTemplate::Logging.reset!
+
+      cli = TestCli.new ['-v', '--no-logfile']
+      out, err = capture_subprocess_io do
+        cli.main
+      end
+      assert_match /MAIN!/, out
+      refute_match /Test logger debug/, out
+      assert_match /Test logger info/, out
+      assert_match /Test logger warning/, out
+      assert_match /Test logger error/, out
+    end
+
+    it 'should log debug info with -D/--debug' do
+      GemTemplate::Config.reset!
+      GemTemplate::Logging.reset!
+
+      cli = TestCli.new ['-D', '--no-logfile']
+      out, err = capture_subprocess_io do
+        cli.main
+      end
+      assert_match /MAIN!/, out
+      assert_match /Test logger debug/, out
+      assert_match /Test logger info/, out
+      assert_match /Test logger warning/, out
+      assert_match /Test logger error/, out
+    end
+
+    it 'should load a custom configuration file with --config' do
+      GemTemplate::Config.reset!
+      GemTemplate::Logging.reset!
+
       cli = TestCli.new ['--config', 'spec/data/configuration.yaml']
       assert_equal 'value1', cli.config.test_quoted_string
       assert_equal 'value2', cli.config.test_string
