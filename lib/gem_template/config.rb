@@ -25,38 +25,52 @@ module GemTemplate
   module Config
     # Module initialization.
     # @return [Configatron] the configuration
-    def Config.init_config
-      unless @configatron
+    def Config.init_config(opt_config_file=nil)
+      unless @config
+        # Load global configuration file
         root = File.dirname __dir__
         global_config = File.join(root, '..', 'etc', 'config.yaml')
-        home_config = File.join(ENV['HOME'], '.gem_template.yaml')
-        config_file = home_config if File.exist?(home_config)
-        config_file ||= global_config if File.exist?(global_config)
-        if config_file
-          config_content = File.read(config_file)
-          config = YAML.load(config_content)
-          configatron.configure_from_hash(config)
-          @config = configatron
+        if  File.exist?(global_config)
+          config_content = File.read(global_config)
+          configatron.configure_from_hash(YAML.load(config_content))
         end
-      end
-    end
 
-    # Inclusion callback.
-    def Config.included(base)
-      Config.init_config
+        # Load $HOME configuration file
+        home_config = File.join(ENV['HOME'], '.gem_template.yaml')
+        if  File.exist?(home_config)
+          config_content = File.read(home_config)
+          configatron.configure_from_hash(YAML.load(config_content))
+        end
+
+        @config = configatron
+      end
+
+      # Load optional configuration (e.g from cli)
+      if opt_config_file and File.exist?(opt_config_file)
+        config_content = File.read(opt_config_file)
+        @config.configure_from_hash(YAML.load(config_content))
+      end
+
+      @config
     end
 
     # Module configuration.
     # @return [Configatron] the module configuration
     def Config.config
-      @config
+      @config ? @config : Config.init_config
     end
 
     # Get configuration section.
     #
     # @return [Configatron] the configatron sub-section
     def Config.get_config_section(section_name=nil)
-      section_name ? @config[section_name] : @config
+      section_name ? Config.config[section_name] : Config.config
+    end
+
+    # Reset the configuration
+    def Config.reset!
+      configatron.reset!
+      @config = nil
     end
 
     # Instance configuration.
