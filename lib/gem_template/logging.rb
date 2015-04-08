@@ -8,6 +8,8 @@ module GemTemplate
   #
   # Adds `include GemTemplate::Logging` to your class to add the `#logger` method.
   #
+  # The logger is initialized with default options if it is not `#init_logger` is not called before.
+  #
   # ## Example
   #
   # ```
@@ -25,14 +27,29 @@ module GemTemplate
     # Create the module logger if it does not exist.
     #
     # @return [Logger] the module logger
-    def Logging.init_logger
-      GemTemplate::Config.init_config
-      config = GemTemplate::Config.get_config_section('logging')
+    def Logging.init_logger(log_to_file=true, file_path=nil, rotation='daily')
+      unless @logger
+        GemTemplate::Config.init_config
+        config = GemTemplate::Config.get_config_section('logging')
 
-      if config.file
-        @logger = Logger.new File.open(config.file.path, File::WRONLY | File::APPEND | File::CREAT)
-      else
-        @logger ||= Logger.new $stdout
+        if config.file
+          if rotation == 'daily'
+            file_datetime = Time.now.strftime '%Y%m%d'
+          else
+            file_datetime = Time.now.strftime '%Y%m%d_%H%M%S'
+          end
+          file_path ||= File.join(config.file.dir, "#{config.file.name}_#{file_datetime}.log")
+        end
+
+        if log_to_file
+          @logdev = File.open(file_path, File::WRONLY | File::APPEND | File::CREAT)
+          @logger = Logger.new(@logdev, rotation)
+        else
+          @logger = Logger.new $stdout
+          @logger.formatter = proc do |severity, datetime, progname, msg|
+            "[#{severity}] #{msg}\n"
+          end
+        end
       end
       @logger
     end
@@ -40,13 +57,16 @@ module GemTemplate
     # Get the module logger.
     # @return [Logger] the module logger
     def Logging.logger
-      @logger
+      @logger ? @logger : Logging.init_logger
     end
 
-    # Inclusion initialisation
-    # @return [Logger] the module logger
-    def Logging.included(base)
-      Logging.init_logger
+    # Close the logger
+    # XXX we don't use the #close function of the Logger as it would close the stdout/stderr if we use it
+    #     we close only if the output is a file
+    def Logging.reset!
+      @logdev.close if @logdev
+      @logdev = nil
+      @logger = nil
     end
 
     # Get the instance logger.
@@ -55,5 +75,28 @@ module GemTemplate
       Logging.logger
     end
 
+    # Log an INFO message
+    def info(msg)
+      msg = "(#{self.class.name}) #{msg}" if logger.level == Logger::DEBUG
+      logger.info(msg)
+    end
+
+    # Log a WARNING message
+    def warning(msg)
+      msg = "(#{self.class.name}) #{msg}" if logger.level == Logger::DEBUG
+      logger.warn(msg)
+    end
+
+    # Log a DEBUG message
+    def debug(msg)
+      msg = "(#{self.class.name}) #{msg}"
+      logger.debug(msg)
+    end
+
+    # Log an ERROR message
+    def error(msg)
+      msg = "(#{self.class.name}) #{msg}" if logger.level == Logger::DEBUG
+      logger.error msg
+    end
   end
 end
