@@ -1,3 +1,4 @@
 logging:
   file:
-    path: '/tmp/gem_template.log'
+    dir: '/tmp'
+    name: 'gem_template'
