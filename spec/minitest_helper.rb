@@ -7,3 +7,8 @@ require 'ci/reporter/rake/minitest'
 
 MiniTest::Reporters.use! [MiniTest::Reporters::SpecReporter.new,
                           MiniTest::Reporters::JUnitReporter.new('spec/reports')]
+
+if ENV['COVERALLS']
+  require 'coveralls'
+  Coveralls.wear!
+end
