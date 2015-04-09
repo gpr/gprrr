@@ -45,3 +45,6 @@ YARD::Rake::YardocTask.new do |t|
   t.files = ['lib/**/*.rb', 'spec/*_spec.rb', ]
   t.stats_options = ['--list-undoc']
 end
+
+# Default task
+task default: :test
