@@ -1,7 +1,8 @@
 # GemTemplate
 
 [![Build Status](https://travis-ci.org/gpr/gem_template.svg?branch=master)](https://travis-ci.org/gpr/gem_template)
-[![Doc Status](http://inch-ci.org/github/gpr/gem_template.svg?branch=master)](http://inch-ci.org/github/gpr/gem_template)
+[![Inline
+docs](http://inch-ci.org/github/gpr/gem_template.svg?branch=master)](http://inch-ci.org/github/gpr/gem_template)
 [![Code Climate](https://codeclimate.com/github/gpr/gem_template/badges/gpa.svg)](https://codeclimate.com/github/gpr/gem_template)
 [![Coverage Status](https://coveralls.io/repos/gpr/gem_template/badge.svg)](https://coveralls.io/r/gpr/gem_template)
 
