@@ -1,0 +1,14 @@
+<div class="table-responsive">
+  <%%= table_for @<%= plural_table_name %>, table_html: { class: 'table table-hover table-stripped' },
+  sortable: true,
+  data_row_html: {} do |table| %>
+  <% attributes.reject(&:password_digest?).each do |attribute| -%>
+      <%% table.column :<%= attribute.name %>, data: lambda { best_in_place_if policy(table.current_row).update?, table.current_row, :<%= attribute.name %> } %>
+  <% end -%>
+  <%% table.footer do %>
+  <div class="pull-right">
+    <%%= paginate @<%= plural_table_name %>, views_prefix: 'templates' %>
+  </div>
+  <%% end %>
+  <%% end %>
+</div>
