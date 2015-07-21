@@ -1,8 +1,8 @@
 # coding: utf-8
 
-require 'gem_template/logging'
+require 'gprrr/logging'
 
-module GemTemplate
+module Gprrr
 
   require 'optparse'
   require 'ostruct'
@@ -14,8 +14,8 @@ module GemTemplate
 
   # Class to specialize for generating console command
   class Cli
-    include GemTemplate::Config
-    include GemTemplate::Logging
+    include Gprrr::Config
+    include Gprrr::Logging
 
     # Class initialization
     #
@@ -78,7 +78,7 @@ module GemTemplate
 
       # Display version
       opts.on_tail('--version', 'Show version') do
-        puts "#{self.class::PROG_NAME} v#{self.class::VERSION.join('.')} (gem_template v#{GemTemplate::VERSION})"
+        puts "#{self.class::PROG_NAME} v#{self.class::VERSION.join('.')} (gprrr v#{Gprrr::VERSION})"
         puts "#{self.class::COPY}."
         exit 0
       end
@@ -102,7 +102,7 @@ module GemTemplate
       end
 
       # Configuration
-      GemTemplate::Config.init_config(@options.config_file)
+      Gprrr::Config.init_config(@options.config_file)
 
       # Logger
       if @options.notification
@@ -113,7 +113,7 @@ module GemTemplate
         rotation = 'daily'
       end
 
-      GemTemplate::Logging.init_logger(@options.log_to_file, log_filename, rotation)
+      Gprrr::Logging.init_logger(@options.log_to_file, log_filename, rotation)
 
       if @options.debug
         logger.level = Logger::DEBUG
@@ -203,7 +203,7 @@ module GemTemplate
       log_filename = @log_filename
       recipients = @options.recipients
       @mail = Mail.new do
-        from    'noreply@gem_template.com'
+        from    'noreply@gprrr.com'
         to      recipients
         subject "[#{prog_name}]#{subject}"
         body    body

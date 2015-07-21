@@ -1,20 +1,20 @@
 # coding: utf-8
 
 require 'configatron'
-require 'gem_template/logging'
+require 'gprrr/logging'
 
 require 'yaml'
 
-module GemTemplate
+module Gprrr
   # Allows to support shared configuration with configatron.
   #
-  # Adds `include GemTemplate::Config` to your class to add the `#config` method.
+  # Adds `include Gprrr::Config` to your class to add the `#config` method.
   #
   # ## Example
   #
   # ```
   # class Sample
-  #   include GemTemplate::Config
+  #   include Gprrr::Config
   # end
   #
   # sample = Sample.new
@@ -36,7 +36,7 @@ module GemTemplate
         end
 
         # Load $HOME configuration file
-        home_config = File.join(ENV['HOME'], '.gem_template.yaml')
+        home_config = File.join(ENV['HOME'], '.gprrr.yaml')
         if  File.exist?(home_config)
           config_content = File.read(home_config)
           configatron.configure_from_hash(YAML.load(config_content))

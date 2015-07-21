@@ -1,12 +1,12 @@
 # coding: utf-8
 
 require 'logger'
-require 'gem_template/config'
+require 'gprrr/config'
 
-module GemTemplate
+module Gprrr
   # Enable logging by sharing the same logger.
   #
-  # Adds `include GemTemplate::Logging` to your class to add the `#logger` method.
+  # Adds `include Gprrr::Logging` to your class to add the `#logger` method.
   #
   # The logger is initialized with default options if it is not `#init_logger` is not called before.
   #
@@ -14,7 +14,7 @@ module GemTemplate
   #
   # ```
   # class Sample
-  #   include GemTemplate::Logging
+  #   include Gprrr::Logging
   # end
   #
   # sample = Sample.new
@@ -29,8 +29,8 @@ module GemTemplate
     # @return [Logger] the module logger
     def Logging.init_logger(log_to_file=true, file_path=nil, rotation='daily')
       unless @logger
-        GemTemplate::Config.init_config
-        config = GemTemplate::Config.get_config_section('logging')
+        Gprrr::Config.init_config
+        config = Gprrr::Config.get_config_section('logging')
 
         if config.file
           if rotation == 'daily'

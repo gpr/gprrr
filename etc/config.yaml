@@ -1,4 +1,4 @@
 logging:
   file:
     dir: '/tmp'
-    name: 'gem_template'
+    name: 'gprrr'

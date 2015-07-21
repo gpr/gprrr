@@ -1,10 +1,10 @@
-# GemTemplate
+# Gprrr
 
-[![Build Status](https://travis-ci.org/gpr/gem_template.svg?branch=master)](https://travis-ci.org/gpr/gem_template)
+[![Build Status](https://travis-ci.org/gpr/gprrr.svg?branch=master)](https://travis-ci.org/gpr/gprrr)
 [![Inline
-docs](http://inch-ci.org/github/gpr/gem_template.svg?branch=master)](http://inch-ci.org/github/gpr/gem_template)
-[![Code Climate](https://codeclimate.com/github/gpr/gem_template/badges/gpa.svg)](https://codeclimate.com/github/gpr/gem_template)
-[![Coverage Status](https://coveralls.io/repos/gpr/gem_template/badge.svg)](https://coveralls.io/r/gpr/gem_template)
+docs](http://inch-ci.org/github/gpr/gprrr.svg?branch=master)](http://inch-ci.org/github/gpr/gprrr)
+[![Code Climate](https://codeclimate.com/github/gpr/gprrr/badges/gpa.svg)](https://codeclimate.com/github/gpr/gprrr)
+[![Coverage Status](https://coveralls.io/repos/gpr/gprrr/badge.svg)](https://coveralls.io/r/gpr/gprrr)
 
 Template GEM for my own usage.
 
@@ -13,7 +13,7 @@ Template GEM for my own usage.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'gem_template'
+gem 'gprrr'
 ```
 
 And then execute:
@@ -22,13 +22,13 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install gem_template
+    $ gem install gprrr
 
 ## Usage
 
 To create a new gem from the template:
 
-1. Clone it `git clone -o template git@github.com:gpr/gem_template.git' <new_name>`
+1. Clone it `git clone -o template git@github.com:gpr/gprrr.git' <new_name>`
 2. Run the script with the new gem name `cd <new_name>; ./bin/create_gem <new_name>`
 3. Edit the README
 4. Commit the change `git commit -a -m "<new_name> gem created"`
@@ -37,7 +37,7 @@ To create a new gem from the template:
 
 ### Configuration
 
-It is possible to configure @@gem_template@@ by creating the file `$HOME/.gem_template.yaml`. You can copy default
+It is possible to configure @@gprrr@@ by creating the file `$HOME/.gprrr.yaml`. You can copy default
 configuration `etc/config.yaml` from the gem repository.
 
 ## Development
@@ -77,7 +77,7 @@ To dynamically preview the doc (automatically refreshed):
 
 ## Contributing
 
-1. Fork it ( https://github.com/gpr/gem_template/fork )
+1. Fork it ( https://github.com/gpr/gprrr/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -86,8 +86,8 @@ To dynamically preview the doc (automatically refreshed):
 
 ## Rake Tasks
 
-* `rake build    # Build gem_template-0.1.0.beta1.gem into the pkg directory`
-* `rake install  # Build and install gem_template-<VERSION>.gem into system gems`
-* `rake release  # Create tag v0.1.0.beta1 and build and push gem_template-<VERSION>.gem to Rubygems`
+* `rake build    # Build gprrr-0.1.0.beta1.gem into the pkg directory`
+* `rake install  # Build and install gprrr-<VERSION>.gem into system gems`
+* `rake release  # Create tag v0.1.0.beta1 and build and push gprrr-<VERSION>.gem to Rubygems`
 * `rake spec     # Run minitest spec test suite`
 * `rake yard     # Generate YARD Documentation`

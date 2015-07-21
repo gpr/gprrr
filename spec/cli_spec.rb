@@ -5,10 +5,10 @@ require 'minitest_helper'
 require 'optparse'
 require 'ostruct'
 
-require 'gem_template/cli'
-require 'gem_template/version'
+require 'gprrr/cli'
+require 'gprrr/version'
 
-class TestCli < GemTemplate::Cli
+class TestCli < Gprrr::Cli
   VERSION = [1,0,0]
   PROG_NAME = 'cli-test'
   COPY = 'Copyright (C) 2015 Test Copyright'
@@ -42,7 +42,7 @@ class TestCli < GemTemplate::Cli
   end
 end
 
-describe GemTemplate::Cli do
+describe Gprrr::Cli do
 
   describe '#initialize' do
 
@@ -77,12 +77,12 @@ describe GemTemplate::Cli do
       end
 
       assert_match "#{TestCli::COPY}", out
-      assert_match "#{TestCli::PROG_NAME} v#{TestCli::VERSION.join('.')} (gem_template v#{GemTemplate::VERSION})", out
+      assert_match "#{TestCli::PROG_NAME} v#{TestCli::VERSION.join('.')} (gprrr v#{Gprrr::VERSION})", out
     end
 
     it 'should log to stdout with --no-logfile' do
-      GemTemplate::Config.reset!
-      GemTemplate::Logging.reset!
+      Gprrr::Config.reset!
+      Gprrr::Logging.reset!
 
       cli = TestCli.new ['--no-logfile']
       out, err = capture_subprocess_io do
@@ -96,8 +96,8 @@ describe GemTemplate::Cli do
     end
 
     it 'should log verbosely with -V/--verbose' do
-      GemTemplate::Config.reset!
-      GemTemplate::Logging.reset!
+      Gprrr::Config.reset!
+      Gprrr::Logging.reset!
 
       cli = TestCli.new ['-v', '--no-logfile']
       out, err = capture_subprocess_io do
@@ -111,8 +111,8 @@ describe GemTemplate::Cli do
     end
 
     it 'should log debug info with -D/--debug' do
-      GemTemplate::Config.reset!
-      GemTemplate::Logging.reset!
+      Gprrr::Config.reset!
+      Gprrr::Logging.reset!
 
       cli = TestCli.new ['-D', '--no-logfile']
       out, err = capture_subprocess_io do
@@ -126,8 +126,8 @@ describe GemTemplate::Cli do
     end
 
     it 'should load a custom configuration file with --config' do
-      GemTemplate::Config.reset!
-      GemTemplate::Logging.reset!
+      Gprrr::Config.reset!
+      Gprrr::Logging.reset!
 
       cli = TestCli.new ['--config', 'spec/data/configuration.yaml']
       assert_equal 'value1', cli.config.test_quoted_string

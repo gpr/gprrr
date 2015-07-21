@@ -2,21 +2,21 @@
 
 require 'minitest_helper'
 
-require 'gem_template/config'
+require 'gprrr/config'
 
 class Sample
-  include GemTemplate::Config
+  include Gprrr::Config
 end
 
 
-describe 'GemTemplate::Config' do
+describe 'Gprrr::Config' do
   before do
     @sample = Sample.new
   end
 
   describe '.init_config' do
     it 'should have created a configuration' do
-      GemTemplate::Config.config.must_be_instance_of Configatron
+      Gprrr::Config.config.must_be_instance_of Configatron
     end
   end
 

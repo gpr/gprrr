@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'gem_template/version'
+require 'gprrr/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'gem_template'
-  spec.version       = GemTemplate::VERSION
+  spec.name          = 'gprrr'
+  spec.version       = Gprrr::VERSION
   spec.authors       = ['Gregory Romé']
   spec.email         = ['gregory.rome@gmail.com']
 
