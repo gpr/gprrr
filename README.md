@@ -1,44 +1,30 @@
 # Gprrr
 
-[![Build Status](https://travis-ci.org/gpr/gprrr.svg?branch=master)](https://travis-ci.org/gpr/gprrr)
-[![Inline
-docs](http://inch-ci.org/github/gpr/gprrr.svg?branch=master)](http://inch-ci.org/github/gpr/gprrr)
-[![Code Climate](https://codeclimate.com/github/gpr/gprrr/badges/gpa.svg)](https://codeclimate.com/github/gpr/gprrr)
-[![Coverage Status](https://coveralls.io/repos/gpr/gprrr/badge.svg)](https://coveralls.io/r/gpr/gprrr)
+GPR's Rails Resources.
+ 
+This gem provides helpers, generators and templates that ease the usage of several standard rails gems:
 
-Template GEM for my own usage.
+ - 'pundit'
+ - 'kaminari'
+ - 'table_for'
+ - 'best_in_place'
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'gprrr'
+gem 'gprrr', github: 'gpr/gprrr'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install gprrr
 
 ## Usage
 
-To create a new gem from the template:
-
-1. Clone it `git clone -o template git@github.com:gpr/gprrr.git' <new_name>`
-2. Run the script with the new gem name `cd <new_name>; ./bin/create_gem <new_name>`
-3. Edit the README
-4. Commit the change `git commit -a -m "<new_name> gem created"`
-5. Add the new git repository `git remote add origin git@github.com:gpr/<new_name>.git'`
-6. Push and set the upstream `git push --set-upstream origin master`
-
-### Configuration
-
-It is possible to configure @@gprrr@@ by creating the file `$HOME/.gprrr.yaml`. You can copy default
-configuration `etc/config.yaml` from the gem repository.
+The helpers and templates are automatically included.
 
 ## Development
 
