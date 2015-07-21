@@ -38,4 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'yard-minitest-spec'
   spec.add_development_dependency 'redcarpet'
   spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'ptools'
 end
