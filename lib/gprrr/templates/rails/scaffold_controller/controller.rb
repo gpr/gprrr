@@ -10,7 +10,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   # GET <%= route_url %>
   def index
-    authorize :<%= singular_table_name %>, :index?
+    authorize <%= namespace %>::<%= class_name %>, :index?
     @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.order(params[:order]).page(params[:page])
     respond_with(@<%= plural_table_name %>)
   end
@@ -23,7 +23,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   # GET <%= route_url %>/new
   def new
-    authorize :<%= singular_table_name %>, :create?
+    authorize <%= namespace %>::<%= class_name %>, :create?
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
     respond_with(@<%= singular_table_name %>)
   end
@@ -35,7 +35,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   # POST <%= route_url %>
   def create
-    authorize :<%= singular_table_name %>, :create?
+    authorize <%= namespace %>::<%= class_name %>, :create?
     @<%= singular_table_name %> = <%= orm_class.build(class_name, "#{singular_table_name}_params") %>
     @<%= orm_instance.save %>
     respond_with(@<%= singular_table_name %>)
