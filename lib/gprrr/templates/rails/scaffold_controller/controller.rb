@@ -6,7 +6,7 @@ require_dependency "<%= namespaced_file_path %>/application_controller"
 class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy]
 
-  respond_to :html
+  respond_to :html, :json
 
   # GET <%= route_url %>
   def index
@@ -44,8 +44,15 @@ class <%= controller_class_name %>Controller < ApplicationController
   # PATCH/PUT <%= route_url %>/1
   def update
     authorize @<%= singular_table_name %>, :update?
-    @<%= orm_instance.update("#{singular_table_name}_params") %>
     respond_with(@<%= singular_table_name %>) do |format|
+      if @<%= orm_instance.update("#{singular_table_name}_params") %>
+        flash[:notice] = "<%= class_name %> ##{@<%= singular_table_name%>.id} succesfully updated."
+      else
+        flash[:error] = []
+        @<%= singular_table_name%>.errors.messages.each do |attr, mesgs|
+          flash[:error] << "'#{attr.to_s.humanize}' #{mesgs.to_sentence.humanize(capitalize: false)}"
+        end
+      end
       format.json { respond_with_bip(@<%= singular_table_name %>) }
     end
   end
