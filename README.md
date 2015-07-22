@@ -26,6 +26,43 @@ And then execute:
 
 The helpers and templates are automatically included.
 
+### best_in_place
+
+Views automatically generates editable fields for tables. In order to enable best_in_place don't forget to enable it
+in your `application.js` file:
+
+```javascript
+//= require jquery
+//= require jquery-ui
+//= require jquery_ujs
+//= require bootstrap-sprockets
+//= require best_in_place
+
+$(document).ready(function() {
+    $('.best_in_place').best_in_place();
+    $('.best_in_place').bind("ajax:success", function() {
+            $(this).closest('tr').effect('highlight');
+            jQuery.getScript('/welcome/get_flash');
+        }
+    );
+
+
+    $('.best_in_place').bind('ajax:error', function () {
+        jQuery.getScript('/welcome/get_flash');
+    });
+});
+
+```
+
+Note: in this example we use a controller action to update the flash:
+
+```erb
+$("#flash").html(
+        "<%= escape_javascript(render partial: 'flash', locals: {flash: @flash}) %>"
+);
+
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
