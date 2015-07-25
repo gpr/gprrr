@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-xs-12">
+<h3><%%= t(:<%= plural_table_name %>) %></h3>
+
+<%% if policy(<%= namespace %>::<%= class_name %>).create? %>
+  <%%= link_to t(:new_<%= singular_table_name %>), new_<%= singular_table_name %>_path, class: 'btn btn-primary' %>
+<%% end %>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div id="<%= plural_table_name %>_table" class="col-lg-12 col-md-12 col-xs-12">
+    <%%= render partial: 'table' %>
+  </div>
+</div>
