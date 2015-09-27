@@ -5,7 +5,8 @@ describe <%= class_name %> do
   let(:<%= file_name %>) { build(:<%= file_name %>) }
 
   it 'must be valid' do
-    value(<%= file_name %>).must_be :valid?
+    <%= file_name %>.valid?
+    value(<%= file_name %>.errors.messages).must_be_empty
   end
 
   it 'must be saved' do
