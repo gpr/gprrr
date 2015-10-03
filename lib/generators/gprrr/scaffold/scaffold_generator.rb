@@ -7,6 +7,10 @@ module Gprrr # :nodoc:
 
       hook_for :form_builder, as: :scaffold
 
+      def generate_policy
+        generate 'pundit:policy', "#{name} -t test_unit"
+      end
+
       protected
 
       def available_views
