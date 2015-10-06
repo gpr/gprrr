@@ -14,7 +14,7 @@ module Gprrr # :nodoc:
       protected
 
       def available_views
-        %w(index new show update _form _record _table)
+        %w(index new show edit _form _record _table)
       end
     end
   end
