@@ -8,6 +8,7 @@ describe <%= controller_class_name %>Controller do
 <% if namespaced? -%>
   before do
     @routes = Engine.routes
+    @<%= singular_table_name %> = create(:<%= singular_table_name %>)
   end
 <% end %>
 
@@ -41,7 +42,7 @@ describe <%= controller_class_name %>Controller do
   end
 
   it 'updates <%= singular_table_name %>' do
-    put :update, id: <%= singular_table_name %>, <%= "#{singular_table_name}: " + "{" + attributes.map { |attribute| "#{attribute.name}: new_#{singular_table_name}.#{attribute.name}" }.join(', ') + "}" %>
+    put :update, id: @<%= singular_table_name %>, <%= "#{singular_table_name}: " + "{" + attributes.map { |attribute| "#{attribute.name}: new_#{singular_table_name}.#{attribute.name}" }.join(', ') + "}" %>
     must_redirect_to <%= singular_table_name %>_path(assigns(:<%= singular_table_name %>))
   end
 
