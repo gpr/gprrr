@@ -48,11 +48,6 @@ GEM
     ansi (1.5.0)
     arel (6.0.3)
     builder (3.2.2)
-    ci_reporter (2.0.0)
-      builder (>= 2.1.2)
-    ci_reporter_minitest (1.0.0)
-      ci_reporter (~> 2.0)
-      minitest (~> 5.0)
     configatron (4.5.0)
     coveralls (0.8.2)
       json (~> 1.8)
@@ -152,7 +147,6 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.10)
-  ci_reporter_minitest
   coveralls
   gprrr!
   minitest
@@ -166,4 +160,4 @@ DEPENDENCIES
   yard-minitest-spec
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
