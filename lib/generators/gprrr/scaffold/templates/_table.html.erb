@@ -2,6 +2,7 @@
   <%%= table_for @<%= plural_table_name %>, table_html: { class: 'table table-hover table-stripped' },
   sortable: true,
   data_row_html: {} do |table| %>
+  <%% table.column :id, link: true %>
   <% attributes.reject(&:password_digest?).each do |attribute| -%>
       <%% table.column :<%= attribute.name %>, data: lambda { best_in_place_if policy(table.current_row).update?, table.current_row, :<%= attribute.name %> } %>
   <% end -%>
