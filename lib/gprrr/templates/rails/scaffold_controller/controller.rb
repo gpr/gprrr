@@ -11,7 +11,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # GET <%= route_url %>
   def index
     authorize <%= namespace %>::<%= class_name %>, :index?
-    @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.order(params[:order]).page(params[:page])
+    @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.order("#{params[:order]} #{params[:sort_mode]}").page(params[:page])
     respond_with(@<%= plural_table_name %>)
   end
 
