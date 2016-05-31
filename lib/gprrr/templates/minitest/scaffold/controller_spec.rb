@@ -10,6 +10,15 @@ describe <%= controller_class_name %>Controller do
     @routes = Engine.routes
     @<%= singular_table_name %> = create(:<%= singular_table_name %>)
   end
+<% else -%>
+  before do
+    @admin = create(:admin)
+    @admin.roles = [create(:admin_role)]
+    @admin.save!
+
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+    sign_in @admin
+  end
 <% end %>
 
   it 'gets index' do
