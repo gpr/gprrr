@@ -4,7 +4,7 @@ module Gprrr
   module RecordLinksHelper
 
     # @return [String] link to display all records
-    def link_index(model:, icon: :database, text: nil, app=main_app)
+    def link_index(model:, icon: :database, text: nil, app: main_app)
       if policy(model).index?
         link_to app.polymorphic_path(model) do
           fa_icon icon, text: text
